@@ -8,7 +8,7 @@ import {
   canMoveRook,
   getEndPosition,
 } from '../logic/canMove';
-import { isInCheck } from './checkKing';
+import { isInCheck } from './kingFunctions';
 
 const promotePawn = (chip, toIndex, board) => {
   const [toRow] = getEndPosition(toIndex);

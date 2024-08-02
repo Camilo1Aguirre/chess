@@ -1,5 +1,5 @@
 import { BLACK_CHIPS, WHITE_CHIPS } from '../constants';
-import { isUnderThreat } from './checkKing';
+import { isUnderThreat } from './kingFunctions';
 
 const getStartPosition = (fromIndex) => {
   return [Math.floor(fromIndex / 8), fromIndex % 8];
@@ -9,17 +9,9 @@ export const getEndPosition = (toIndex) => {
   return [Math.floor(toIndex / 8), toIndex % 8];
 };
 
-const getColorChip = (chip) => {
-  if (Object.values(WHITE_CHIPS).includes(chip)) {
-    return BLACK_CHIPS;
-  } else if (Object.values(BLACK_CHIPS).includes(chip)) {
-    return WHITE_CHIPS;
-  }
-  return null;
-};
-
-const captureChip = (chip, toIndex, board) => {
-  const opponentChips = getColorChip(chip);
+const captureChip = (turn, toIndex, board) => {
+  const opponentChips =
+    turn === BLACK_CHIPS ? Object.values(WHITE_CHIPS) : Object.values(BLACK_CHIPS);
   if (opponentChips == null) {
     return false;
   } else {
@@ -57,7 +49,7 @@ export const canMovePawn = (chip, fromIndex, toIndex, board, turn, capture = fal
   if (
     toRow === fromRow + step &&
     Math.abs(fromCol - toCol) === 1 &&
-    (captureChip(chip, toIndex, board) || capture)
+    (captureChip(turn, toIndex, board) || capture)
   ) {
     return true;
   }
@@ -97,7 +89,7 @@ export const canMoveRook = (chip, fromIndex, toIndex, board, turn) => {
   // Verificar si la casilla de destino está vacía o tiene una pieza del oponente
   if (
     (fromCol === toCol || fromRow === toRow) &&
-    (board[toIndex] === null || captureChip(chip, toIndex, board))
+    (board[toIndex] === null || captureChip(turn, toIndex, board))
   ) {
     return true;
   }
@@ -114,7 +106,7 @@ export const canMoveKing = (chip, fromIndex, toIndex, board, turn) => {
   if (
     Math.abs(fromRow - toRow) <= 1 &&
     Math.abs(fromCol - toCol) <= 1 &&
-    (board[toIndex] === null || captureChip(chip, toIndex, board))
+    (board[toIndex] === null || captureChip(turn, toIndex, board))
   ) {
     if (!isUnderThreat(toIndex, board, turn)) {
       return true;
@@ -155,7 +147,7 @@ export const canMoveBishop = (chip, fromIndex, toIndex, board, turn) => {
   }
 
   // Verificar si la casilla de destino está vacía o tiene una pieza del oponente
-  if (board[toIndex] === null || captureChip(chip, toIndex, board)) {
+  if (board[toIndex] === null || captureChip(turn, toIndex, board)) {
     return true;
   }
 
@@ -183,7 +175,7 @@ export const canMoveHorse = (chip, fromIndex, toIndex, board, turn) => {
   if (
     Math.abs(fromRow - toRow) === 2 &&
     Math.abs(fromCol - toCol) === 1 &&
-    (board[toIndex] === null || captureChip(chip, toIndex, board))
+    (board[toIndex] === null || captureChip(turn, toIndex, board))
   ) {
     return true;
   }
@@ -191,7 +183,7 @@ export const canMoveHorse = (chip, fromIndex, toIndex, board, turn) => {
   if (
     Math.abs(fromRow - toRow) === 1 &&
     Math.abs(fromCol - toCol) === 2 &&
-    (board[toIndex] === null || captureChip(chip, toIndex, board))
+    (board[toIndex] === null || captureChip(turn, toIndex, board))
   ) {
     return true;
   }
