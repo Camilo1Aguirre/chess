@@ -31,6 +31,7 @@ export function Game() {
     - Rey ahogado
     - Ultimos movimientos repetido = empate
     - Mostrar fichas eliminadas
+    - Si una ficha intercepta el enroque
   */
 
   const saveGameState = (newBoard, newTurn) => {

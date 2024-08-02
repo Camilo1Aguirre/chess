@@ -51,3 +51,19 @@ export const isInCheck = (board, turn) => {
   const kingPosition = getPositionKing(board, turn);
   return isUnderThreat(kingPosition, board, turn);
 };
+
+export const castling = (fromIndex, toIndex, board, turn) => {
+  if (board[toIndex] === turn.rook) return false;
+
+  if (toIndex < fromIndex) {
+    for (let i = toIndex; i < fromIndex; i++) {
+      if (board[i] !== null) return false;
+    }
+  } else if (fromIndex < toIndex) {
+    for (let i = fromIndex; i < toIndex; i++) {
+      if (board[i] !== null) return false;
+    }
+  }
+
+  return true;
+};
