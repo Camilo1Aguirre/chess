@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { initialBoard, WHITE_CHIPS } from '../constants';
+import { BLACK_CHIPS, initialBoard, WHITE_CHIPS } from '../constants';
 import { Board } from './Board';
 import { chipFunctions } from '../logic/chipFunctions';
 import { getPieceType } from '../logic/getPieceType';
 import { Winner } from './Winner';
 import { Header } from './Header';
+import { Square } from './Square';
 
 export function Game() {
   const [board, setBoard] = useState(() => {
@@ -24,13 +25,12 @@ export function Game() {
   /* TO DO:
     - Enroque
     - Promocion peones
-    - Mostrar turno
-    - Evitar que la partida se pierda
     - Fichas puedan comer a la ficha que da jaque
     - Que las fichas que estan protegiendo al rey no se puedan mover
     - Que fichas puedan proteger al rey
     - Rey ahogado
     - Ultimos movimientos repetido = empate
+    - Mostrar fichas eliminadas
   */
 
   const saveGameState = (newBoard, newTurn) => {
@@ -81,9 +81,13 @@ export function Game() {
   return (
     <section className="game">
       <Header resetGame={resetGame} />
-      <div className="board">
-        <Board board={board} moveChip={moveChip} />
-        <Winner winner={winner} resetGame={resetGame} />
+      <div className="chess">
+        <Square isSelected={turn === WHITE_CHIPS} item={WHITE_CHIPS.king} />
+        <div className="board">
+          <Board board={board} moveChip={moveChip} />
+          <Winner winner={winner} resetGame={resetGame} />
+        </div>
+        <Square isSelected={turn === BLACK_CHIPS} item={BLACK_CHIPS.king} />
       </div>
     </section>
   );

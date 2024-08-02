@@ -4,37 +4,92 @@
   justify-content: center;
   align-items: center;
   gap: 20px;
+  position: relative;
+  box-sizing: border-box;
 }
 
+.chess {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
 
 .board {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
+  gap: 0;
+}
+
+.squareBlack, .squareWhite {
+  display: flex;
+  font-size: 40px;
+  height: 55px;
+  width: 55px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none; /* Evita la selección de texto */
+  transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-color 0.15s ease-in-out;
 }
 
 .squareBlack {
-  display: flex;
-  font-size: 40px;
-  height: 55px;
-  width: 55px;
-  background-color: #804000;
+  background-color: #6E3D16; /* Color más oscuro y elegante */
   color: black;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
 }
 
 .squareWhite {
-  display: flex;
-  font-size: 40px;
-  height: 55px;
-  width: 55px;
-  background-color: rgb(226, 221, 205);
+  background-color: #F5F0E1; /* Color más suave */
   color: black;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
 }
+
+.squareBlack:hover, .squareWhite:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.1); /* Sutil cambio de color al hacer hover */
+}
+
+.square {
+  display: flex;
+  width: 65px;
+  height: 65px;
+  background-color: #F0D9B5;
+  color: #333;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  box-sizing: border-box;
+  user-select: none; /* Evita la selección de texto */
+}
+
+.square:nth-child(odd) {
+  background-color: #B58863;
+}
+
+
+.square-is-selected {
+  display: flex;
+  width: 65px;
+  height: 65px;
+  background-color: #F0D9B5;
+  color: #333;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  border: 2px solid #FFD700;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  box-sizing: border-box;
+  user-select: none; /* Evita la selección de texto */
+}
+
+.square-is-selected:nth-child(odd) {
+  background-color: #B58863;
+}
+
 
 .winner {
   position: absolute;
@@ -44,11 +99,11 @@
   left: 0;
   display: grid;
   place-items: center;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.75);
 }
 
 .winner .text {
-  background: #111;
+  background: #222;
   height: 300px;
   width: 320px;
   border: 2px solid #eee;
@@ -58,6 +113,7 @@
   justify-content: center;
   align-items: center;
   gap: 20px;
+  user-select: none;
 }
 
 .winner .win {
@@ -67,11 +123,32 @@
   border-radius: 10px;
   display: flex;
   gap: 15px;
+  user-select: none;
 }
 
 .resetButton {
-    background-color: rgb(160, 161, 87);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
+  background-color: #A0A157;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.resetButton:hover {
+  background-color: #8C8D47;
+}
+
+.turn-indicator {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #444;
+  color: white;
+  border-radius: 10px;
+  font-size: 20px;
+  z-index: 10;
+  user-select: none;
 }
