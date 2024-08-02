@@ -1,4 +1,5 @@
 import { BLACK_CHIPS, WHITE_CHIPS } from '../constants';
+import { isUnderThreat } from './checkKing';
 
 const getStartPosition = (fromIndex) => {
   return [Math.floor(fromIndex / 8), fromIndex % 8];
@@ -17,16 +18,6 @@ const getColorChip = (chip) => {
   return null;
 };
 
-const isInCheck = (toIndex, board, opponentChips) => {
-  for (let fromIndex = 0; fromIndex < board.length; fromIndex++) {
-    if (board[fromIndex] !== null && opponentChips.includes(board[fromIndex])) {
-      if (canMove(board[fromIndex], fromIndex, toIndex, board)) {
-        return true;
-      }
-    }
-  }
-};
-
 const captureChip = (chip, toIndex, board) => {
   const opponentChips = getColorChip(chip);
   if (opponentChips == null) {
@@ -34,59 +25,6 @@ const captureChip = (chip, toIndex, board) => {
   } else {
     return Object.values(opponentChips).includes(board[toIndex]);
   }
-};
-
-const isUnderThreat = (toIndex, board, opponentChips) => {
-  console.log('fly');
-  for (let fromIndex = 0; fromIndex < board.length; fromIndex++) {
-    if (board[fromIndex] !== null && opponentChips.includes(board[fromIndex])) {
-      if (canMove(board[fromIndex], fromIndex, toIndex, board)) {
-        console.log('pig');
-        return true;
-      }
-    }
-  }
-  return false;
-};
-
-const canMove = (chip, fromIndex, toIndex, board) => {
-  if (Object.values(BLACK_CHIPS).includes(chip)) {
-    switch (chip) {
-      case BLACK_CHIPS.pawn:
-        console.log('bird');
-        return canMovePawn(chip, fromIndex, toIndex, board, WHITE_CHIPS);
-      case BLACK_CHIPS.bishop:
-        return canMoveBishop(chip, fromIndex, toIndex, board, WHITE_CHIPS);
-      case BLACK_CHIPS.horse:
-        return canMoveHorse(chip, fromIndex, toIndex, board, WHITE_CHIPS);
-      case BLACK_CHIPS.king:
-        return canMoveKing(chip, fromIndex, toIndex, board, WHITE_CHIPS);
-      case BLACK_CHIPS.queen:
-        return canMoveQueen(chip, fromIndex, toIndex, board, WHITE_CHIPS);
-      case BLACK_CHIPS.rook:
-        return canMoveRook(chip, fromIndex, toIndex, board, WHITE_CHIPS);
-      default:
-        return false;
-    }
-  } else if (Object.values(WHITE_CHIPS).includes(chip)) {
-    switch (chip) {
-      case WHITE_CHIPS.pawn:
-        return canMovePawn(chip, fromIndex, toIndex, board, BLACK_CHIPS);
-      case WHITE_CHIPS.bishop:
-        return canMoveBishop(chip, fromIndex, toIndex, board, BLACK_CHIPS);
-      case WHITE_CHIPS.horse:
-        return canMoveHorse(chip, fromIndex, toIndex, board, BLACK_CHIPS);
-      case WHITE_CHIPS.king:
-        return canMoveKing(chip, fromIndex, toIndex, board, BLACK_CHIPS);
-      case WHITE_CHIPS.queen:
-        return canMoveQueen(chip, fromIndex, toIndex, board, BLACK_CHIPS);
-      case WHITE_CHIPS.rook:
-        return canMoveRook(chip, fromIndex, toIndex, board, BLACK_CHIPS);
-      default:
-        return false;
-    }
-  }
-  return false;
 };
 
 export const canMovePawn = (chip, fromIndex, toIndex, board, turn) => {
@@ -131,7 +69,7 @@ export const canMoveRook = (chip, fromIndex, toIndex, board, turn) => {
   const [toRow, toCol] = getEndPosition(toIndex);
 
   if (turn.rook !== board[fromIndex]) {
-    if (chip !== board[fromIndex]) return false;
+    if (turn.queen !== board[fromIndex]) return false;
   }
 
   // Movimiento horizontal
@@ -165,6 +103,7 @@ export const canMoveRook = (chip, fromIndex, toIndex, board, turn) => {
 
   return false;
 };
+
 export const canMoveKing = (chip, fromIndex, toIndex, board, turn) => {
   const [fromRow, fromCol] = getStartPosition(fromIndex);
   const [toRow, toCol] = getEndPosition(toIndex);
@@ -178,7 +117,7 @@ export const canMoveKing = (chip, fromIndex, toIndex, board, turn) => {
   ) {
     const opponentChips =
       chip === BLACK_CHIPS.king ? Object.values(WHITE_CHIPS) : Object.values(BLACK_CHIPS);
-    if (!isUnderThreat(toIndex, board, opponentChips)) {
+    if (!isUnderThreat(toIndex, board, opponentChips, turn)) {
       return true;
     }
   }
@@ -191,7 +130,9 @@ export const canMoveBishop = (chip, fromIndex, toIndex, board, turn) => {
   const [toRow, toCol] = getEndPosition(toIndex);
 
   if (turn.bishop !== board[fromIndex]) {
-    if (chip !== board[fromIndex]) return false;
+    if (turn.queen !== board[fromIndex]) {
+      return false;
+    }
   }
 
   // Verificar que el movimiento sea diagonal
