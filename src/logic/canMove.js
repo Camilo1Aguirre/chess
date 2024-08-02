@@ -116,9 +116,7 @@ export const canMoveKing = (chip, fromIndex, toIndex, board, turn) => {
     Math.abs(fromCol - toCol) <= 1 &&
     (board[toIndex] === null || captureChip(chip, toIndex, board))
   ) {
-    const opponentChips =
-      chip === BLACK_CHIPS.king ? Object.values(WHITE_CHIPS) : Object.values(BLACK_CHIPS);
-    if (!isUnderThreat(toIndex, board, opponentChips, turn)) {
+    if (!isUnderThreat(toIndex, board, turn)) {
       return true;
     }
   }

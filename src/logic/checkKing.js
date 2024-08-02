@@ -34,25 +34,20 @@ const canMove = (chip, fromIndex, toIndex, board, turn, capture = false) => {
   }
 };
 
-export const isUnderThreat = (toIndex, board, opponentChips, turn) => {
+export const isUnderThreat = (toIndex, board, turn) => {
+  const opponentChips =
+    turn === BLACK_CHIPS ? Object.values(WHITE_CHIPS) : Object.values(BLACK_CHIPS);
   for (let fromIndex = 0; fromIndex < board.length; fromIndex++) {
     if (board[fromIndex] !== null && opponentChips.includes(board[fromIndex])) {
       if (canMove(board[fromIndex], fromIndex, toIndex, board, turn, true)) {
-        if (canMove(board[fromIndex], fromIndex, toIndex, board, turn, true)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-};
-
-export const isInCheck = (toIndex, board, opponentChips, turn) => {
-  for (let fromIndex = 0; fromIndex < board.length; fromIndex++) {
-    if (board[fromIndex] !== null && opponentChips.includes(board[fromIndex])) {
-      if (canMove(board[fromIndex], fromIndex, toIndex, board, turn)) {
         return true;
       }
     }
   }
+  return false;
+};
+
+export const isInCheck = (board, turn) => {
+  const kingPosition = getPositionKing(board, turn);
+  return isUnderThreat(kingPosition, board, turn);
 };
