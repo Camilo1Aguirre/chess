@@ -27,7 +27,7 @@ const captureChip = (chip, toIndex, board) => {
   }
 };
 
-export const canMovePawn = (chip, fromIndex, toIndex, board, turn) => {
+export const canMovePawn = (chip, fromIndex, toIndex, board, turn, capture = false) => {
   const [fromRow, fromCol] = getStartPosition(fromIndex);
   const [toRow, toCol] = getEndPosition(toIndex);
   const isBlack = chip === BLACK_CHIPS.pawn;
@@ -37,7 +37,7 @@ export const canMovePawn = (chip, fromIndex, toIndex, board, turn) => {
 
   if (turn.pawn !== chip) return false;
 
-  if (toRow === fromRow + step && fromCol === toCol && board[toIndex] === null) {
+  if (toRow === fromRow + step && fromCol === toCol && board[toIndex] === null && !capture) {
     // Movimiento una casilla hacia adelante
     return true;
   }
@@ -47,7 +47,8 @@ export const canMovePawn = (chip, fromIndex, toIndex, board, turn) => {
     fromRow === initialRow &&
     toRow === doubleStepRow &&
     fromCol === toCol &&
-    board[toIndex] === null
+    board[toIndex] === null &&
+    !capture
   ) {
     return true;
   }
@@ -56,7 +57,7 @@ export const canMovePawn = (chip, fromIndex, toIndex, board, turn) => {
   if (
     toRow === fromRow + step &&
     Math.abs(fromCol - toCol) === 1 &&
-    captureChip(chip, toIndex, board)
+    (captureChip(chip, toIndex, board) || capture)
   ) {
     return true;
   }

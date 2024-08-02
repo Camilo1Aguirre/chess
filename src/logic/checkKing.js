@@ -8,7 +8,15 @@ import {
   canMoveRook,
 } from './canMove';
 
-const canMove = (chip, fromIndex, toIndex, board, turn) => {
+export const getPositionKing = (board, turn) => {
+  for (let fromIndex = 0; fromIndex < board.length; fromIndex++) {
+    if (board[fromIndex] === turn.king) {
+      return fromIndex;
+    }
+  }
+};
+
+const canMove = (chip, fromIndex, toIndex, board, turn, capture = false, positionKing) => {
   const opponentChips = turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS;
   switch (chip) {
     case opponentChips.bishop:
@@ -18,7 +26,7 @@ const canMove = (chip, fromIndex, toIndex, board, turn) => {
     case opponentChips.king:
       return canMoveKing(chip, fromIndex, toIndex, board, opponentChips);
     case opponentChips.pawn:
-      return canMovePawn(chip, fromIndex, toIndex, board, opponentChips);
+      return canMovePawn(chip, fromIndex, toIndex, board, opponentChips, capture, positionKing);
     case opponentChips.queen:
       return canMoveQueen(chip, fromIndex, toIndex, board, opponentChips);
     case opponentChips.rook:
@@ -29,7 +37,7 @@ const canMove = (chip, fromIndex, toIndex, board, turn) => {
 export const isUnderThreat = (toIndex, board, opponentChips, turn) => {
   for (let fromIndex = 0; fromIndex < board.length; fromIndex++) {
     if (board[fromIndex] !== null && opponentChips.includes(board[fromIndex])) {
-      if (canMove(board[fromIndex], fromIndex, toIndex, board, turn)) {
+      if (canMove(board[fromIndex], fromIndex, toIndex, board, turn, true)) {
         return true;
       }
     }
