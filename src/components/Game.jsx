@@ -21,9 +21,9 @@ export function Game() {
     return WHITE_CHIPS;
   });
   const [winner, setWinner] = useState(null); // null: No ha terminado la partida false: Empate
+  const [moveKing, setMoveKing] = useState(false);
 
   /* TO DO:
-    - Si el rey se ha movido no se puede enrocar
     - Promocion peones
     - Fichas puedan comer a la ficha que da jaque
     - Que las fichas que estan protegiendo al rey no se puedan mover
@@ -59,16 +59,18 @@ export function Game() {
       if (pieceType && chipFunctions[pieceType]) {
         // Actualizar el tablero y el turno directamente
         const newBoard = [...board];
-        const newTurn = chipFunctions[pieceType](
+        const [newTurn, newMoveKing] = chipFunctions[pieceType](
           selectedChip,
           selectedIndex,
           index,
           newBoard,
           turn,
+          moveKing,
         );
         saveGameState(newBoard, newTurn);
         setBoard(newBoard);
         setTurn(newTurn);
+        setMoveKing(newMoveKing);
       }
 
       setSelectedChip(null);

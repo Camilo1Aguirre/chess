@@ -58,21 +58,17 @@ export const castlingKing = (fromIndex, toIndex, board, turn) => {
   if (board[toIndex + rookPosition] !== turn.rook) return false;
 
   if (toIndex < fromIndex) {
-    console.log('pig');
     for (let i = toIndex; i < fromIndex; i++) {
       if (board[i] !== null) return false;
     }
   } else if (toIndex > fromIndex) {
-    console.log('pig');
     for (let i = fromIndex + rookPosition; i <= toIndex; i++) {
-      console.log(i);
       if (board[i] !== null) {
         console.log(board[i]);
         return false;
       }
     }
   }
-  console.log('fly');
   return true;
 };
 

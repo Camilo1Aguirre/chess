@@ -26,51 +26,55 @@ const replaceChip = (chip, fromIndex, toIndex, newBoard) => {
 };
 
 export const chipFunctions = {
-  pawn: (chip, selectedIndex, index, board, turn) => {
+  pawn: (chip, selectedIndex, index, board, turn, moveKing) => {
     if (canMovePawn(chip, selectedIndex, index, board, turn) && !isInCheck(board, turn)) {
       replaceChip(chip, selectedIndex, index, board, turn);
       promotePawn(chip, index, board);
-      return turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS;
+      return [turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS, moveKing];
     }
-    return turn; // Retorna el mismo turno si el movimiento no es válido
+    return [turn, moveKing]; // Retorna el mismo turno si el movimiento no es válido
   },
-  rook: (chip, selectedIndex, index, board, turn) => {
+  rook: (chip, selectedIndex, index, board, turn, moveKing) => {
     if (canMoveRook(chip, selectedIndex, index, board, turn) && !isInCheck(board, turn)) {
       replaceChip(chip, selectedIndex, index, board, turn);
-      return turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS;
+      return [turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS, moveKing];
     }
-    return turn;
+    return [turn, moveKing];
   },
-  king: (chip, selectedIndex, index, board, turn) => {
+  king: (chip, selectedIndex, index, board, turn, moveKing) => {
     if (canMoveKing(chip, selectedIndex, index, board, turn)) {
       replaceChip(chip, selectedIndex, index, board);
-      return turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS;
-    } else if (castlingKing(selectedIndex, index, board, turn) && !isInCheck(board, turn)) {
+      return [turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS, true];
+    } else if (
+      castlingKing(selectedIndex, index, board, turn) &&
+      !isInCheck(board, turn) &&
+      !moveKing
+    ) {
       replaceChip(chip, selectedIndex, index, board);
       castlingRook(selectedIndex, index, board, turn);
-      return turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS;
+      return [turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS, true];
     }
-    return turn;
+    return [turn, moveKing];
   },
-  bishop: (chip, selectedIndex, index, board, turn) => {
+  bishop: (chip, selectedIndex, index, board, turn, moveKing) => {
     if (canMoveBishop(chip, selectedIndex, index, board, turn) && !isInCheck(board, turn)) {
       replaceChip(chip, selectedIndex, index, board);
-      return turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS;
+      return [turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS, moveKing];
     }
-    return turn;
+    return [turn, moveKing];
   },
-  queen: (chip, selectedIndex, index, board, turn) => {
+  queen: (chip, selectedIndex, index, board, turn, moveKing) => {
     if (canMoveQueen(chip, selectedIndex, index, board, turn) && !isInCheck(board, turn)) {
       replaceChip(chip, selectedIndex, index, board);
-      return turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS;
+      return [turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS, moveKing];
     }
-    return turn;
+    return [turn, moveKing];
   },
-  horse: (chip, selectedIndex, index, board, turn) => {
+  horse: (chip, selectedIndex, index, board, turn, moveKing) => {
     if (canMoveHorse(chip, selectedIndex, index, board, turn) && !isInCheck(board, turn)) {
       replaceChip(chip, selectedIndex, index, board);
-      return turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS;
+      return [turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS, moveKing];
     }
-    return turn;
+    return [turn, moveKing];
   },
 };
