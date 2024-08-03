@@ -23,7 +23,7 @@ export function Game() {
   const [winner, setWinner] = useState(null); // null: No ha terminado la partida false: Empate
 
   /* TO DO:
-    - Enroque
+    - Si el rey se ha movido no se puede enrocar
     - Promocion peones
     - Fichas puedan comer a la ficha que da jaque
     - Que las fichas que estan protegiendo al rey no se puedan mover

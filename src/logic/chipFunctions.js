@@ -8,7 +8,7 @@ import {
   canMoveRook,
   getEndPosition,
 } from '../logic/canMove';
-import { castling, isInCheck } from './kingFunctions';
+import { castlingKing, castlingRook, isInCheck } from './kingFunctions';
 
 const promotePawn = (chip, toIndex, board) => {
   const [toRow] = getEndPosition(toIndex);
@@ -45,9 +45,10 @@ export const chipFunctions = {
     if (canMoveKing(chip, selectedIndex, index, board, turn)) {
       replaceChip(chip, selectedIndex, index, board);
       return turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS;
-    } else if (castling(selectedIndex, index, board, turn) && !isInCheck(board, turn)) {
-      const toIndex = index > selectedIndex ? index - 1 : index + 1;
-      replaceChip(chip, selectedIndex, toIndex, board);
+    } else if (castlingKing(selectedIndex, index, board, turn) && !isInCheck(board, turn)) {
+      replaceChip(chip, selectedIndex, index, board);
+      castlingRook(selectedIndex, index, board, turn);
+      return turn === BLACK_CHIPS ? WHITE_CHIPS : BLACK_CHIPS;
     }
     return turn;
   },

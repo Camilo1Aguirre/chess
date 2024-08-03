@@ -52,18 +52,32 @@ export const isInCheck = (board, turn) => {
   return isUnderThreat(kingPosition, board, turn);
 };
 
-export const castling = (fromIndex, toIndex, board, turn) => {
-  if (board[toIndex] === turn.rook) return false;
+export const castlingKing = (fromIndex, toIndex, board, turn) => {
+  const rookPosition = toIndex > fromIndex ? 1 : -1;
+
+  if (board[toIndex + rookPosition] !== turn.rook) return false;
 
   if (toIndex < fromIndex) {
+    console.log('pig');
     for (let i = toIndex; i < fromIndex; i++) {
       if (board[i] !== null) return false;
     }
-  } else if (fromIndex < toIndex) {
-    for (let i = fromIndex; i < toIndex; i++) {
-      if (board[i] !== null) return false;
+  } else if (toIndex > fromIndex) {
+    console.log('pig');
+    for (let i = fromIndex + rookPosition; i <= toIndex; i++) {
+      console.log(i);
+      if (board[i] !== null) {
+        console.log(board[i]);
+        return false;
+      }
     }
   }
-
+  console.log('fly');
   return true;
+};
+
+export const castlingRook = (fromIndex, toIndex, board, turn) => {
+  const rookPosition = toIndex > fromIndex ? 1 : -1;
+  board[toIndex + rookPosition] = null;
+  board[toIndex - rookPosition] = turn.rook;
 };
