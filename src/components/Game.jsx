@@ -7,6 +7,21 @@ import { Winner } from './Winner';
 import { Header } from './Header';
 import { Square } from './Square';
 
+/* TO DO:
+    - Enroque se cancela cuando se hace uno
+    - Promocion peones
+    - Fichas puedan comer a la ficha que da jaque
+    - Que las fichas que estan protegiendo al rey no se puedan mover
+    - Que fichas puedan proteger al rey
+    - Rey ahogado
+    - Ultimos movimientos repetido = empate
+    - Mostrar fichas eliminadas
+    - Si una ficha intercepta el enroque
+  */
+
+/**
+ * Componente principal del juego de ajedrez.
+ */
 export function Game() {
   const [board, setBoard] = useState(() => {
     const boardFromStorage = window.localStorage.getItem('board');
@@ -20,44 +35,40 @@ export function Game() {
     if (turnFromStorage) return JSON.parse(turnFromStorage);
     return WHITE_CHIPS;
   });
-  const [winner, setWinner] = useState(null); // null: No ha terminado la partida false: Empate
+  const [winner, setWinner] = useState(null);
   const [moveKing, setMoveKing] = useState(false);
+  const [promotion, setPromotion] = useState(null);
 
-  /* TO DO:
-    - Promocion peones
-    - Fichas puedan comer a la ficha que da jaque
-    - Que las fichas que estan protegiendo al rey no se puedan mover
-    - Que fichas puedan proteger al rey
-    - Rey ahogado
-    - Ultimos movimientos repetido = empate
-    - Mostrar fichas eliminadas
-    - Si una ficha intercepta el enroque
-  */
-
+  /**
+   * Guarda el estado del juego en localStorage.
+   */
   const saveGameState = (newBoard, newTurn) => {
     setBoard(newBoard);
     setTurn(newTurn);
-    // Guardar en localStorage después de actualizar el estado
     window.localStorage.setItem('board', JSON.stringify(newBoard));
     window.localStorage.setItem('turn', JSON.stringify(newTurn));
   };
 
+  /**
+   * Reinicia el estado del juego.
+   */
   const resetGame = () => {
     setBoard(initialBoard);
     setSelectedChip(null);
     setSelectedIndex(null);
     setTurn(WHITE_CHIPS);
     setWinner(null);
-    // Limpiar localStorage
     window.localStorage.removeItem('board');
     window.localStorage.removeItem('turn');
   };
 
+  /**
+   * Maneja el movimiento de una pieza en el tablero.
+   */
   const moveChip = (index) => {
     if (selectedChip !== null) {
       const pieceType = getPieceType(selectedChip);
       if (pieceType && chipFunctions[pieceType]) {
-        // Actualizar el tablero y el turno directamente
         const newBoard = [...board];
         const [newTurn, newMoveKing] = chipFunctions[pieceType](
           selectedChip,
@@ -68,8 +79,6 @@ export function Game() {
           moveKing,
         );
         saveGameState(newBoard, newTurn);
-        setBoard(newBoard);
-        setTurn(newTurn);
         setMoveKing(newMoveKing);
       }
 

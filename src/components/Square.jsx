@@ -1,4 +1,3 @@
-// Square.jsx
 export function Square({ index, item, onClick, isSelected }) {
   let className;
 

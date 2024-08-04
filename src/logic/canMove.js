@@ -1,25 +1,47 @@
-import { BLACK_CHIPS, WHITE_CHIPS } from '../constants';
-import { isUnderThreat } from './kingFunctions';
+// File canMove.js
+import { BLACK_CHIPS } from '../constants';
+import { isUnderThreat } from './threats';
+import { getEndPosition, getStartPosition } from './getPositionChip';
+import { captureChip } from './moveFunctions';
 
-const getStartPosition = (fromIndex) => {
-  return [Math.floor(fromIndex / 8), fromIndex % 8];
-};
-
-export const getEndPosition = (toIndex) => {
-  return [Math.floor(toIndex / 8), toIndex % 8];
-};
-
-const captureChip = (turn, toIndex, board) => {
-  const opponentChips =
-    turn === BLACK_CHIPS ? Object.values(WHITE_CHIPS) : Object.values(BLACK_CHIPS);
-  if (opponentChips == null) {
-    return false;
-  } else {
-    return Object.values(opponentChips).includes(board[toIndex]);
+/**
+ * Determina si una ficha puede moverse a una casilla en especifico
+ * @param {string} chip - La pieza a mover.
+ * @param {number} fromIndex - El índice de inicio.
+ * @param {number} toIndex - El índice del destino.
+ * @param {Array} board - El estado actual del tablero.
+ * @param {Object} chips - Es el conjunto de la pieza a mover
+ * @param {boolean} capture - Aplica solo para el peón si se analiza que captura en diagonal
+ */
+export const canMove = (chip, fromIndex, toIndex, board, chips, capture = false) => {
+  switch (chip) {
+    case chips.bishop:
+      return canMoveBishop(fromIndex, toIndex, board, chips);
+    case chips.horse:
+      return canMoveHorse(fromIndex, toIndex, board, chips);
+    case chips.king:
+      return canMoveKing(fromIndex, toIndex, board, chips);
+    case chips.pawn:
+      return canMovePawn(chip, fromIndex, toIndex, board, chips, capture);
+    case chips.queen:
+      return canMoveQueen(chip, fromIndex, toIndex, board, chips);
+    case chips.rook:
+      return canMoveRook(fromIndex, toIndex, board, chips);
+    default:
+      return false;
   }
 };
 
-export const canMovePawn = (chip, fromIndex, toIndex, board, turn, capture = false) => {
+/**
+ * Determina si una ficha puede moverse a una casilla en especifico
+ * @param {string} chip - La pieza a mover.
+ * @param {number} fromIndex - El índice de inicio.
+ * @param {number} toIndex - El índice del destino.
+ * @param {Array} board - El estado actual del tablero.
+ * @param {Object} turn - Es el conjunto de la pieza a mover
+ * @param {boolean} capture - Aplica solo para el peón si se analiza que captura en diagonal
+ */
+const canMovePawn = (chip, fromIndex, toIndex, board, turn, capture) => {
   const [fromRow, fromCol] = getStartPosition(fromIndex);
   const [toRow, toCol] = getEndPosition(toIndex);
   const isBlack = chip === BLACK_CHIPS.pawn;
@@ -57,7 +79,14 @@ export const canMovePawn = (chip, fromIndex, toIndex, board, turn, capture = fal
   return false;
 };
 
-export const canMoveRook = (chip, fromIndex, toIndex, board, turn) => {
+/**
+ * Determina si una ficha puede moverse a una casilla en especifico
+ * @param {number} fromIndex - El índice de inicio.
+ * @param {number} toIndex - El índice del destino.
+ * @param {Array} board - El estado actual del tablero.
+ * @param {Object} turn - Es el conjunto de la pieza a mover
+ */
+const canMoveRook = (fromIndex, toIndex, board, turn) => {
   const [fromRow, fromCol] = getStartPosition(fromIndex);
   const [toRow, toCol] = getEndPosition(toIndex);
 
@@ -97,7 +126,14 @@ export const canMoveRook = (chip, fromIndex, toIndex, board, turn) => {
   return false;
 };
 
-export const canMoveKing = (chip, fromIndex, toIndex, board, turn) => {
+/**
+ * Determina si una ficha puede moverse a una casilla en especifico
+ * @param {number} fromIndex - El índice de inicio.
+ * @param {number} toIndex - El índice del destino.
+ * @param {Array} board - El estado actual del tablero.
+ * @param {Object} turn - Es el conjunto de la pieza a mover
+ */
+const canMoveKing = (fromIndex, toIndex, board, turn) => {
   const [fromRow, fromCol] = getStartPosition(fromIndex);
   const [toRow, toCol] = getEndPosition(toIndex);
 
@@ -116,7 +152,14 @@ export const canMoveKing = (chip, fromIndex, toIndex, board, turn) => {
   return false;
 };
 
-export const canMoveBishop = (chip, fromIndex, toIndex, board, turn) => {
+/**
+ * Determina si una ficha puede moverse a una casilla en especifico
+ * @param {number} fromIndex - El índice de inicio.
+ * @param {number} toIndex - El índice del destino.
+ * @param {Array} board - El estado actual del tablero.
+ * @param {Object} turn - Es el conjunto de la pieza a mover
+ */
+const canMoveBishop = (fromIndex, toIndex, board, turn) => {
   const [fromRow, fromCol] = getStartPosition(fromIndex);
   const [toRow, toCol] = getEndPosition(toIndex);
 
@@ -154,7 +197,15 @@ export const canMoveBishop = (chip, fromIndex, toIndex, board, turn) => {
   return false;
 };
 
-export const canMoveQueen = (chip, fromIndex, toIndex, board, turn) => {
+/**
+ * Determina si una ficha puede moverse a una casilla en especifico
+ * @param {string} chip - La pieza a mover.
+ * @param {number} fromIndex - El índice de inicio.
+ * @param {number} toIndex - El índice del destino.
+ * @param {Array} board - El estado actual del tablero.
+ * @param {Object} turn - Es el conjunto de la pieza a mover
+ */
+const canMoveQueen = (chip, fromIndex, toIndex, board, turn) => {
   if (turn.queen !== board[fromIndex]) return false;
   if (
     canMoveBishop(chip, fromIndex, toIndex, board, turn) ||
@@ -166,7 +217,14 @@ export const canMoveQueen = (chip, fromIndex, toIndex, board, turn) => {
   return false;
 };
 
-export const canMoveHorse = (chip, fromIndex, toIndex, board, turn) => {
+/**
+ * Determina si una ficha puede moverse a una casilla en especifico
+ * @param {number} fromIndex - El índice de inicio.
+ * @param {number} toIndex - El índice del destino.
+ * @param {Array} board - El estado actual del tablero.
+ * @param {Object} turn - Es el conjunto de la pieza a mover
+ */
+const canMoveHorse = (fromIndex, toIndex, board, turn) => {
   const [fromRow, fromCol] = getStartPosition(fromIndex);
   const [toRow, toCol] = getEndPosition(toIndex);
 
